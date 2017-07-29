@@ -29,6 +29,8 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
  * A placeholder fragment containing a simple view.
  */
 public class MapFragment extends Fragment {
+
+    private static final String MAPBOX_API_KEY = BuildConfig.MAPBOX_API_KEY;
     private MapView mapView;
     private LatLng userPosition;
 
@@ -38,7 +40,7 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Mapbox.getInstance(getActivity(), getString(R.string.mapbox_public_token));
+        Mapbox.getInstance(getActivity(), MAPBOX_API_KEY);
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -60,6 +62,7 @@ public class MapFragment extends Fragment {
                 if(mapboxMap.getMyLocation() != null) {
                     userPosition = new LatLng(mapboxMap.getMyLocation().getLatitude(),
                             mapboxMap.getMyLocation().getLongitude());
+                    //update user position
                     mapView.setCameraDistance(10);
                     CameraPosition position = new CameraPosition.Builder()
                             .target(userPosition)
@@ -70,7 +73,7 @@ public class MapFragment extends Fragment {
                             .icon(icon)
                     );
                     mapboxMap.animateCamera(CameraUpdateFactory
-                            .newCameraPosition(position), 7000);
+                            .newCameraPosition(position), 2000);
 
                 }
 
