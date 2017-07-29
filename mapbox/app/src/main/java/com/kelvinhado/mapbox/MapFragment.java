@@ -4,10 +4,10 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -32,6 +32,7 @@ public class MapFragment extends Fragment {
 
     private static final String MAPBOX_API_KEY = BuildConfig.MAPBOX_API_KEY;
     private MapView mapView;
+    private MapboxMap mapboxMap;
     private LatLng userPosition;
 
     public MapFragment() {
@@ -52,31 +53,12 @@ public class MapFragment extends Fragment {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-                IconFactory iconFactory = IconFactory.getInstance(getActivity());
-                Icon icon = iconFactory.fromResource(R.drawable.map_marker);
-                mapboxMap.addMarker(new MarkerOptions()
-                        .title(getString(R.string.map_location_me))
-                        .position(new LatLng(48.85819, 2.29458))
-                        .icon(icon)
-                );
+                MapFragment.this.mapboxMap = mapboxMap;
                 if(mapboxMap.getMyLocation() != null) {
                     userPosition = new LatLng(mapboxMap.getMyLocation().getLatitude(),
                             mapboxMap.getMyLocation().getLongitude());
-                    //update user position
-                    mapView.setCameraDistance(10);
-                    CameraPosition position = new CameraPosition.Builder()
-                            .target(userPosition)
-                            .build();
-                    mapboxMap.addMarker(new MarkerOptions()
-                            .title(getString(R.string.map_location_me))
-                            .position(userPosition)
-                            .icon(icon)
-                    );
-                    mapboxMap.animateCamera(CameraUpdateFactory
-                            .newCameraPosition(position), 2000);
-
+                    createNewMarker(userPosition, getString(R.string.map_location_me), true);
                 }
-
             }
         });
 
@@ -86,6 +68,24 @@ public class MapFragment extends Fragment {
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
                 checkLocationPermission();
+        }
+    }
+
+    public void createNewMarker(LatLng position, String title, boolean animateCamera) {
+        mapboxMap.clear();
+        IconFactory iconFactory = IconFactory.getInstance(getActivity());
+        Icon icon = iconFactory.fromResource(R.drawable.map_marker);
+        mapboxMap.addMarker(new MarkerOptions()
+                .title(title)
+                .position(position)
+                .icon(icon)
+        );
+        if(animateCamera) {
+            CameraPosition camPosition = new CameraPosition.Builder()
+                    .zoom(13)
+                    .target(position)
+                    .build();
+            mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPosition), 2000);
         }
     }
 

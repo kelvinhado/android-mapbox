@@ -11,6 +11,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "MAPBOX_API_KEY", MAPBOX_API_KEY)
+        resValue "string", "g_places_api_key", G_PLACES_API_KEY
     }
     buildTypes {
         release {
@@ -35,6 +36,7 @@ dependencies {
     }
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
+    compile 'com.google.android.gms:play-services-places:11.0.2'
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
 }
