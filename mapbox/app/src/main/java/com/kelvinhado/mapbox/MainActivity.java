@@ -8,7 +8,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,27 +33,46 @@ import com.kelvinhado.mapbox.addresses.FetchAddressIntentService;
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, MapFragment.OnNewPositionSelectedListener {
     private MapFragment mMapFragment;
-    private AddressResultReceiver mAddressResultReceiver;
     private PlaceAutocompleteFragment autocompleteFragment;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+
+    private AddressResultReceiver mAddressResultReceiver;
     private Location lastSelectedLocation;
     private String mAddressOutput;
+    private String[] mPlanetTitles;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mMapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_map);
+        autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         mAddressResultReceiver = new AddressResultReceiver(new Handler());
+        initialiseAutocompleteFragment();
 
+        mPlanetTitles = new String[3];
+        mPlanetTitles[0] = "hello";
+        mPlanetTitles[2] = "hi";
+        mPlanetTitles[1] = "zuof";
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+    }
+
+    public void initialiseAutocompleteFragment() {
         GoogleApiClient mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(this, this)
                 .build();
-
-        autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         //address filter
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
@@ -111,20 +136,29 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            // Display the address string
-            // or an error message sent from the intent service.
             mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-
-            // Show a toast message if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
                 autocompleteFragment.setText(mAddressOutput);
             }
             else {
                 autocompleteFragment.setText("");
             }
-
         }
+    }
+
+    public void openDrawer(View view){
+        mDrawerLayout.openDrawer(Gravity.LEFT);
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectAddress(position);
+        }
+    }
+
+    private void selectAddress(int position) {
+        mDrawerList.setItemChecked(position, true);
     }
 
 }
