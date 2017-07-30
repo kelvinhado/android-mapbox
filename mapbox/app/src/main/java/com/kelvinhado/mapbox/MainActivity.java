@@ -1,6 +1,8 @@
 package com.kelvinhado.mapbox;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -29,6 +31,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.kelvinhado.mapbox.addresses.Constants;
 import com.kelvinhado.mapbox.addresses.FetchAddressIntentService;
+import com.kelvinhado.mapbox.model.Address;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, MapFragment.OnNewPositionSelectedListener {
@@ -87,7 +92,10 @@ public class MainActivity extends AppCompatActivity
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                mMapFragment.changeMarkerPosition(Utils.toMapBoxLatLng(place.getLatLng()), place.getAddress().toString(), true);
+                mMapFragment.changeMarkerPosition(Utils.toMapBoxLatLng(place.getLatLng()),
+                        place.getAddress().toString(), true);
+                saveNewAddress(new Address(place.getAddress().toString(),
+                        place.getLatLng().latitude, place.getLatLng().longitude));
             }
 
             @Override
@@ -139,6 +147,8 @@ public class MainActivity extends AppCompatActivity
             mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
             if (resultCode == Constants.SUCCESS_RESULT) {
                 autocompleteFragment.setText(mAddressOutput);
+                saveNewAddress(new Address(mAddressOutput,
+                        lastSelectedLocation.getLatitude(), lastSelectedLocation.getLongitude()));
             }
             else {
                 autocompleteFragment.setText("");
@@ -159,6 +169,42 @@ public class MainActivity extends AppCompatActivity
 
     private void selectAddress(int position) {
         mDrawerList.setItemChecked(position, true);
+    }
+
+
+    // used shared preferences because of the small amount of data stored
+    public void saveNewAddress(Address address) {
+        ArrayList<Address> savedAddresses = getSavedAddresses();
+        savedAddresses.remove(0);
+        savedAddresses.add(address);
+
+        String data = "";
+        for(Address tmpAddress : savedAddresses) {
+            data += tmpAddress.getPlaceName() + ":";
+            data += tmpAddress.getLatitude() + ":";
+            data += tmpAddress.getLongitude() + ";";
+        }
+        data = data.substring(0, data.length() - 1); //remove last char
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.shared_pref_key), data);
+        editor.apply();
+    }
+
+    public ArrayList<Address> getSavedAddresses() {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String storedAddresses = sharedPref.getString(getString(R.string.shared_pref_key), "");
+
+        ArrayList<Address> addressList = new ArrayList<>();
+        String[] addresses = storedAddresses.split(";");
+        for(String address : addresses) {
+            String[] data = address.split(":");
+            if(data.length == 3)
+                addressList.add(new Address(data[0],Double.parseDouble(data[1]),
+                        Double.parseDouble(data[2])));
+        }
+        return addressList;
     }
 
 }

@@ -7,4 +7,5 @@
     <string name="permission_alert_button_ok">OK</string>
     <string name="map_button_search">GO</string>
     <string name="address_found">adresse trouvée</string>
+    <string name="shared_pref_key">pref_key</string>
 </resources>
