@@ -2,12 +2,14 @@ package com.kelvinhado.mapbox;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -37,6 +39,7 @@ public class MapFragment extends Fragment {
     private static final String MAPBOX_API_KEY = BuildConfig.MAPBOX_API_KEY;
     private MapView mapView;
     private MapboxMap mapboxMap;
+    private boolean isBeingAnimated;
     private boolean firstPositionPlaced;
     private LatLng userPosition;
     private LatLng selectedPosition;
@@ -81,13 +84,13 @@ public class MapFragment extends Fragment {
         mapView.addOnMapChangedListener(new MapView.OnMapChangedListener() {
             @Override
             public void onMapChanged(int change) {
-                if(change == 3) { // #REGION_DID_CHANGE
+                if(change == 3 && !isBeingAnimated) { // #REGION_DID_CHANGE
                     float centerX = mapView.getX() + mapView.getWidth()  / 2;
                     float centerY = mapView.getY() + mapView.getHeight()  / 2;
                     selectedPosition = mapboxMap.getProjection().fromScreenLocation(new PointF(centerX, centerY));
                     changeMarkerPosition(selectedPosition, "", false);
                 }
-                if(change == 13) { // #DID_FINISH_RENDERING_MAP_FULLY_RENDERED
+                else if(change == 13 && !isBeingAnimated) { // #DID_FINISH_RENDERING_MAP_FULLY_RENDERED
                     mCallback.onNewPositionSelected(Utils.toGoogleLatLng(selectedPosition));
                 }
             }
@@ -123,6 +126,16 @@ public class MapFragment extends Fragment {
                     .target(position)
                     .build();
             mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPosition), 2000);
+
+            //lock address research during animation
+            isBeingAnimated = true;
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isBeingAnimated = false;
+                }
+            }, 2500);
         }
     }
 
@@ -221,8 +234,15 @@ public class MapFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity activity;
+
+        if (context instanceof Activity){
+            activity = (Activity) context;
+        } else {
+            activity = null;
+        }
         try {
             mCallback = (OnNewPositionSelectedListener) activity;
         } catch (ClassCastException e) {

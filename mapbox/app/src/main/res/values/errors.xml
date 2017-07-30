@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_connexion_places">connexion to places has failed</string>
-    <string name="service_not_available">service not available</string>
-    <string name="invalid_lat_long_used">wrong data</string>
-    <string name="no_address_found">no address found</string>
-    <string name="no_geocoder_available">recherche impossible</string>
+    <string name="error_service_not_available">service not available</string>
+    <string name="error_invalid_lat_long_used">wrong data</string>
+    <string name="error_no_address_found">no address found</string>
+    <string name="error_no_geocoder_available">recherche impossible</string>
 </resources>

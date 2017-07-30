@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, MapFragment.OnNewPositionSelectedListener {
     private MapFragment mMapFragment;
     private AddressResultReceiver mAddressResultReceiver;
+    private PlaceAutocompleteFragment autocompleteFragment;
     private Location lastSelectedLocation;
     private String mAddressOutput;
 
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity
                 .enableAutoManage(this, this)
                 .build();
 
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+        autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         //address filter
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
@@ -69,7 +70,6 @@ public class MainActivity extends AppCompatActivity
                 // TODO: Handle the error.
             }
         });
-
     }
 
     @Override
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
     private void fetchAddress() {
         if (!Geocoder.isPresent()) {
             Toast.makeText(MainActivity.this,
-                    R.string.no_geocoder_available,
+                    R.string.error_no_geocoder_available,
                     Toast.LENGTH_LONG).show();
             return;
         }
@@ -118,10 +118,10 @@ public class MainActivity extends AppCompatActivity
 
             // Show a toast message if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
-                Toast.makeText(MainActivity.this, mAddressOutput, Toast.LENGTH_SHORT).show();
+                autocompleteFragment.setText(mAddressOutput);
             }
             else {
-                Toast.makeText(MainActivity.this, "epic fail", Toast.LENGTH_SHORT).show();
+                autocompleteFragment.setText("");
             }
 
         }
