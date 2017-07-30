@@ -16,7 +16,8 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener, MapFragment.OnNewPositionSelectedListener {
     private MapFragment mMapFragment;
 
     @Override
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                mMapFragment.changeMarkerPosition(Utils.fromGoogleLatLng(place.getLatLng()), place.getAddress().toString(), true);
+                mMapFragment.changeMarkerPosition(Utils.toMapBoxLatLng(place.getLatLng()), place.getAddress().toString(), true);
             }
 
             @Override
@@ -62,5 +63,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(this, R.string.error_connexion_places, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNewPositionSelected(LatLng position) {
+        Toast.makeText(this, "" + position.latitude, Toast.LENGTH_SHORT).show();
     }
 }

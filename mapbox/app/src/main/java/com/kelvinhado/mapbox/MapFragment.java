@@ -1,6 +1,7 @@
 package com.kelvinhado.mapbox;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
@@ -40,6 +41,7 @@ public class MapFragment extends Fragment {
     private LatLng userPosition;
     private LatLng selectedPosition;
     private Marker marker;
+    OnNewPositionSelectedListener mCallback;
 
     public MapFragment() {
     }
@@ -86,7 +88,7 @@ public class MapFragment extends Fragment {
                     changeMarkerPosition(selectedPosition, "hello", false);
                 }
                 if(change == 13) { // #DID_FINISH_RENDERING_MAP_FULLY_RENDERED
-                    // TODO call places with selected position
+                    mCallback.onNewPositionSelected(Utils.toGoogleLatLng(selectedPosition));
                 }
             }
         });
@@ -134,7 +136,7 @@ public class MapFragment extends Fragment {
                 new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.permission_alert_title)
                         .setMessage(R.string.permission_alert_location)
-                        .setPositiveButton(R.string.permission_alert_button_ok, 
+                        .setPositiveButton(R.string.permission_alert_button_ok,
                                 new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -170,8 +172,6 @@ public class MapFragment extends Fragment {
             }
         }
     }
-
-
 
     @Override
     public void onStart() {
@@ -215,5 +215,19 @@ public class MapFragment extends Fragment {
         mapView.onSaveInstanceState(outState);
     }
 
+    // Container Activity must implement this interface
+    public interface OnNewPositionSelectedListener {
+        void onNewPositionSelected(com.google.android.gms.maps.model.LatLng position);
+    }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (OnNewPositionSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnNewPositionSelectedListener");
+        }
+    }
 }

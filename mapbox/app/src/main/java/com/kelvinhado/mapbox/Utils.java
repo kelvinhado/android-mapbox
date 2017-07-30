@@ -8,11 +8,11 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 public class Utils {
 
-    public static LatLng fromGoogleLatLng(com.google.android.gms.maps.model.LatLng latlng) {
+    public static LatLng toMapBoxLatLng(com.google.android.gms.maps.model.LatLng latlng) {
         return new LatLng(latlng.latitude, latlng.longitude);
     }
 
-    public static com.google.android.gms.maps.model.LatLng fromMapBoxLatLng(LatLng latlng) {
+    public static com.google.android.gms.maps.model.LatLng toGoogleLatLng(LatLng latlng) {
         return new com.google.android.gms.maps.model.LatLng(latlng.getLatitude(), latlng.getLongitude());
     }
 }
