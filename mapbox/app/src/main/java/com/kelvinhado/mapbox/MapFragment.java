@@ -85,7 +85,7 @@ public class MapFragment extends Fragment {
                     float centerX = mapView.getX() + mapView.getWidth()  / 2;
                     float centerY = mapView.getY() + mapView.getHeight()  / 2;
                     selectedPosition = mapboxMap.getProjection().fromScreenLocation(new PointF(centerX, centerY));
-                    changeMarkerPosition(selectedPosition, "hello", false);
+                    changeMarkerPosition(selectedPosition, "", false);
                 }
                 if(change == 13) { // #DID_FINISH_RENDERING_MAP_FULLY_RENDERED
                     mCallback.onNewPositionSelected(Utils.toGoogleLatLng(selectedPosition));

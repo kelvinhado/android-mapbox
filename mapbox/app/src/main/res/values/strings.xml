@@ -6,4 +6,5 @@
     <string name="permission_alert_location">Pour un service de meilleur qualité, l\'application a besoin de vous localiser</string>
     <string name="permission_alert_button_ok">OK</string>
     <string name="map_button_search">GO</string>
+    <string name="address_found">adresse trouvée</string>
 </resources>
