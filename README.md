@@ -3,8 +3,10 @@ A quick project that shows the power of MapBox for Android
 
 
 ## Step 1 
+Integrate MapBox SDK and show current user position
 
 ## Step 2 
+Add a search bar to query addresses
 
-![Alt text](screenshots/step2-0.png?raw=true "Step2") 
-![Alt text](screenshots/step2-1.png?raw=true "Step2")
+## Step 3
+Search for addresses using the map gesture 
