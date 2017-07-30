@@ -32,9 +32,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .enableAutoManage(this, this)
                 .build();
 
-
-
-
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         //address filter
@@ -51,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                mMapFragment.createNewMarker(Utils.fromGoogleLatLng(place.getLatLng()), place.getAddress().toString(), true);
+                mMapFragment.changeMarkerPosition(Utils.fromGoogleLatLng(place.getLatLng()), place.getAddress().toString(), true);
             }
 
             @Override

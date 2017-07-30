@@ -3,6 +3,8 @@ package com.kelvinhado.mapbox;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.PointF;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -33,7 +36,10 @@ public class MapFragment extends Fragment {
     private static final String MAPBOX_API_KEY = BuildConfig.MAPBOX_API_KEY;
     private MapView mapView;
     private MapboxMap mapboxMap;
+    private boolean firstPositionPlaced;
     private LatLng userPosition;
+    private LatLng selectedPosition;
+    private Marker marker;
 
     public MapFragment() {
     }
@@ -52,12 +58,35 @@ public class MapFragment extends Fragment {
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(MapboxMap mapboxMap) {
+            public void onMapReady(final MapboxMap mapboxMap) {
                 MapFragment.this.mapboxMap = mapboxMap;
-                if(mapboxMap.getMyLocation() != null) {
-                    userPosition = new LatLng(mapboxMap.getMyLocation().getLatitude(),
-                            mapboxMap.getMyLocation().getLongitude());
-                    createNewMarker(userPosition, getString(R.string.map_location_me), true);
+
+                mapboxMap.setOnMyLocationChangeListener(new MapboxMap.OnMyLocationChangeListener() {
+                    @Override
+                    public void onMyLocationChange(@Nullable Location location) {
+                        if(mapboxMap.getMyLocation() != null && !firstPositionPlaced) {
+                            firstPositionPlaced = true;
+                            userPosition = new LatLng(mapboxMap.getMyLocation().getLatitude(),
+                                    mapboxMap.getMyLocation().getLongitude());
+                            changeMarkerPosition(userPosition, getString(R.string.map_location_me), true);
+                        }
+
+                    }
+                });
+            }
+        });
+
+        mapView.addOnMapChangedListener(new MapView.OnMapChangedListener() {
+            @Override
+            public void onMapChanged(int change) {
+                if(change == 3) { // #REGION_DID_CHANGE
+                    float centerX = mapView.getX() + mapView.getWidth()  / 2;
+                    float centerY = mapView.getY() + mapView.getHeight()  / 2;
+                    selectedPosition = mapboxMap.getProjection().fromScreenLocation(new PointF(centerX, centerY));
+                    changeMarkerPosition(selectedPosition, "hello", false);
+                }
+                if(change == 13) { // #DID_FINISH_RENDERING_MAP_FULLY_RENDERED
+                    // TODO call places with selected position
                 }
             }
         });
@@ -71,15 +100,21 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public void createNewMarker(LatLng position, String title, boolean animateCamera) {
-        mapboxMap.clear();
-        IconFactory iconFactory = IconFactory.getInstance(getActivity());
-        Icon icon = iconFactory.fromResource(R.drawable.map_marker);
-        mapboxMap.addMarker(new MarkerOptions()
-                .title(title)
-                .position(position)
-                .icon(icon)
-        );
+    public void changeMarkerPosition(LatLng position, String title, boolean animateCamera) {
+
+        if(marker == null) {
+            IconFactory iconFactory = IconFactory.getInstance(getActivity());
+            Icon icon = iconFactory.fromResource(R.drawable.map_marker);
+            marker = mapboxMap.addMarker(
+                    new MarkerOptions()
+                            .position(position)
+                            .title(title)
+                            .icon(icon));
+        } else {
+            marker.setPosition(position);
+            marker.setTitle(title);
+        }
+
         if(animateCamera) {
             CameraPosition camPosition = new CameraPosition.Builder()
                     .zoom(13)
