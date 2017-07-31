@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity
                     selectedAddress.getLongitude(),
                     selectedAddress.getPlaceName(),
                     true);
+            autocompleteFragment.setText(selectedAddress.getPlaceName());
         }
     }
 
