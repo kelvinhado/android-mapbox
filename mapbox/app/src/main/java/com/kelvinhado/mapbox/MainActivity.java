@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.kelvinhado.mapbox.addresses.Constants;
 import com.kelvinhado.mapbox.addresses.FetchAddressIntentService;
 import com.kelvinhado.mapbox.fragments.CustomMapFragment;
+import com.kelvinhado.mapbox.fragments.GMapsFragment;
 import com.kelvinhado.mapbox.fragments.MapBoxFragment;
 import com.kelvinhado.mapbox.model.Address;
 
@@ -62,15 +63,21 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int mapMode = getIntent().getIntExtra(MAP_EXTRA, -1);
-
-
-        mMapFragment = new MapBoxFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frameLayout_map, (MapBoxFragment) mMapFragment);
-        ft.commit();
-
-
+        switch (getIntent().getIntExtra(MAP_EXTRA, -1)) {
+            case MAP_MAPBOX:
+                mMapFragment = new MapBoxFragment();
+                ft.replace(R.id.frameLayout_map, (MapBoxFragment) mMapFragment);
+                ft.commit();
+                break;
+            case MAP_GMAPS:
+                mMapFragment = new GMapsFragment();
+                ft.replace(R.id.frameLayout_map, (GMapsFragment) mMapFragment);
+                ft.commit();
+                break;
+            default:
+                return;
+        }
 
         // init auto-complete fragment
         autocompleteFragment = (PlaceAutocompleteFragment)

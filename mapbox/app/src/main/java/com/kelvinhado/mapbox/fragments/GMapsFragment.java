@@ -42,6 +42,8 @@ public class GMapsFragment extends Fragment implements OnMapReadyCallback, Custo
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.setMaxZoomPreference(18);
 
+        //TODO implements same behavior as MapBoxFragment
+
     }
 
     @Override
@@ -64,6 +66,6 @@ public class GMapsFragment extends Fragment implements OnMapReadyCallback, Custo
 
     @Override
     public void changeMarkerPosition(double latitude, double longitude, String title, boolean animateCamera) {
-
+        //TODO implements same behavior as MapBoxFragment
     }
 }

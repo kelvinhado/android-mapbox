@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kelvinhado.mapbox.SplashActivity">
+
+    <Button
+        android:id="@+id/buttonMapBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="186dp"
+        android:text="@string/button_mapbox"
+        android:onClick="onClick"/>
+
+    <Button
+        android:id="@+id/buttonMaps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_maps"
+        android:layout_marginTop="71dp"
+        android:layout_alignTop="@+id/buttonMapBox"
+        android:layout_alignLeft="@+id/buttonMapBox"
+        android:layout_alignStart="@+id/buttonMapBox"
+        android:layout_alignRight="@+id/buttonMapBox"
+        android:layout_alignEnd="@+id/buttonMapBox"
+        android:onClick="onClick"/>
+</RelativeLayout>
