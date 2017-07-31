@@ -1,4 +1,4 @@
-package com.kelvinhado.mapbox;
+package com.kelvinhado.mapbox.fragments;
 
 /**
  * Created by kelvin on 31/07/2017.

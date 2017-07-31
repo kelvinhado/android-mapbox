@@ -2,7 +2,7 @@
 <com.google.android.gms.maps.MapView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.kelvinhado.mapbox.GMapsFragment"
+    tools:context="com.kelvinhado.mapbox.fragments.GMapsFragment"
     tools:showIn="@layout/activity_main"
     android:id="@+id/mapView"
     android:layout_width="match_parent"

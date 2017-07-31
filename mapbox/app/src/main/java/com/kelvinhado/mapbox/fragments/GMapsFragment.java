@@ -1,4 +1,4 @@
-package com.kelvinhado.mapbox;
+package com.kelvinhado.mapbox.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.kelvinhado.mapbox.R;
 
 
 public class GMapsFragment extends Fragment implements OnMapReadyCallback, CustomMapFragment {

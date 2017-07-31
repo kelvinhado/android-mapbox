@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.kelvinhado.mapbox.addresses.Constants;
 import com.kelvinhado.mapbox.addresses.FetchAddressIntentService;
+import com.kelvinhado.mapbox.fragments.CustomMapFragment;
 import com.kelvinhado.mapbox.model.Address;
 
 import java.util.ArrayList;
