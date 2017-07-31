@@ -12,10 +12,10 @@ import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,6 +34,7 @@ import com.kelvinhado.mapbox.addresses.FetchAddressIntentService;
 import com.kelvinhado.mapbox.model.Address;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, MapFragment.OnNewPositionSelectedListener {
@@ -41,12 +42,12 @@ public class MainActivity extends AppCompatActivity
     private PlaceAutocompleteFragment autocompleteFragment;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private AddressesAdapter mAdapter;
 
     private AddressResultReceiver mAddressResultReceiver;
     private Location lastSelectedLocation;
     private String mAddressOutput;
-    private String[] mPlanetTitles;
-
+    private List<Address> addressList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +58,11 @@ public class MainActivity extends AppCompatActivity
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         mAddressResultReceiver = new AddressResultReceiver(new Handler());
         initialiseAutocompleteFragment();
-
-        mPlanetTitles = new String[3];
-        mPlanetTitles[0] = "hello";
-        mPlanetTitles[2] = "hi";
-        mPlanetTitles[1] = "zuof";
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
+        addressList = getSavedAddresses();
+        mAdapter = new AddressesAdapter(this, addressList);
+        mDrawerList.setAdapter(mAdapter);
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -163,21 +160,21 @@ public class MainActivity extends AppCompatActivity
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectAddress(position);
+            mDrawerList.setItemChecked(position, true);
+            Address selectedAddress = (Address) mDrawerList.getItemAtPosition(position);
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+            mMapFragment.changeMarkerPosition(Utils.toMapBoxLatLng(selectedAddress.getLatitude(),
+                    selectedAddress.getLongitude()), selectedAddress.getPlaceName(), true);
         }
     }
-
-    private void selectAddress(int position) {
-        mDrawerList.setItemChecked(position, true);
-    }
-
 
     // used shared preferences because of the small amount of data stored
     public void saveNewAddress(Address address) {
         ArrayList<Address> savedAddresses = getSavedAddresses();
-        savedAddresses.remove(0);
+        if(savedAddresses.size() >= 15) {
+            savedAddresses.remove(0);
+        }
         savedAddresses.add(address);
-
         String data = "";
         for(Address tmpAddress : savedAddresses) {
             data += tmpAddress.getPlaceName() + ":";
@@ -190,6 +187,11 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.shared_pref_key), data);
         editor.apply();
+
+        //notify the adapter
+        addressList.clear();
+        addressList.addAll(savedAddresses);
+        mAdapter.notifyDataSetChanged();
     }
 
     public ArrayList<Address> getSavedAddresses() {
@@ -203,6 +205,7 @@ public class MainActivity extends AppCompatActivity
             if(data.length == 3)
                 addressList.add(new Address(data[0],Double.parseDouble(data[1]),
                         Double.parseDouble(data[2])));
+            Log.d("Address", ">" +  data[0] + "/" + Double.parseDouble(data[1]) + "/" + Double.parseDouble(data[2]));
         }
         return addressList;
     }

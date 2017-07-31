@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
         android:layout_toRightOf="@+id/button_drawer"
         android:layout_toEndOf="@+id/button_drawer" />
