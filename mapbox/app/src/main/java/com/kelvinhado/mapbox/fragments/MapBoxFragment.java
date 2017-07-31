@@ -1,4 +1,4 @@
-package com.kelvinhado.mapbox;
+package com.kelvinhado.mapbox.fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -19,7 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kelvinhado.mapbox.fragments.CustomMapFragment;
+import com.kelvinhado.mapbox.BuildConfig;
+import com.kelvinhado.mapbox.R;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;

@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:mapbox="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.kelvinhado.mapbox.MapBoxFragment"
+        tools:context="com.kelvinhado.mapbox.fragments.MapBoxFragment"
         tools:showIn="@layout/activity_main"
         android:id="@+id/mapView"
         android:layout_width="match_parent"
