@@ -17,3 +17,6 @@ Used Intent service for reversion geocoding because the operation may take some 
 Decided to use sharedpreferences to store the 15 last known location.
 It might not be a good solution for performance .. consider using the SqlLite DB.
 
+## Step 5
+Made the refacto to be able to easily switch between different maps provider. change fragment using a framelayout.
+
