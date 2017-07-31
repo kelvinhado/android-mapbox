@@ -34,7 +34,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MapFragment extends Fragment {
+public class MapBoxFragment extends Fragment implements CustomMapFragment {
 
     private static final String MAPBOX_API_KEY = BuildConfig.MAPBOX_API_KEY;
     private MapView mapView;
@@ -46,14 +46,14 @@ public class MapFragment extends Fragment {
     private Marker marker;
     OnNewPositionSelectedListener mCallback;
 
-    public MapFragment() {
+    public MapBoxFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Mapbox.getInstance(getActivity(), MAPBOX_API_KEY);
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate(R.layout.fragment_map_mapbox, container, false);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MapFragment extends Fragment {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(final MapboxMap mapboxMap) {
-                MapFragment.this.mapboxMap = mapboxMap;
+                MapBoxFragment.this.mapboxMap = mapboxMap;
 
                 mapboxMap.setOnMyLocationChangeListener(new MapboxMap.OnMyLocationChangeListener() {
                     @Override
@@ -91,7 +91,8 @@ public class MapFragment extends Fragment {
                     changeMarkerPosition(selectedPosition, "", false);
                 }
                 else if(change == 13 && !isBeingAnimated) { // #DID_FINISH_RENDERING_MAP_FULLY_RENDERED
-                    mCallback.onNewPositionSelected(Utils.toGoogleLatLng(selectedPosition));
+                    mCallback.onNewPositionSelected(selectedPosition.getLatitude(),
+                            selectedPosition.getLongitude());
                 }
             }
         });
@@ -103,6 +104,11 @@ public class MapFragment extends Fragment {
                 != PackageManager.PERMISSION_GRANTED) {
                 checkLocationPermission();
         }
+    }
+
+    @Override
+    public void changeMarkerPosition(double latitude, double longitude, String title, boolean animateCamera) {
+        changeMarkerPosition(new LatLng(latitude, longitude), title, animateCamera);
     }
 
     public void changeMarkerPosition(LatLng position, String title, boolean animateCamera) {
@@ -230,7 +236,7 @@ public class MapFragment extends Fragment {
 
     // Container Activity must implement this interface
     public interface OnNewPositionSelectedListener {
-        void onNewPositionSelected(com.google.android.gms.maps.model.LatLng position);
+        void onNewPositionSelected(double latitude, double longitude);
     }
 
     @Override

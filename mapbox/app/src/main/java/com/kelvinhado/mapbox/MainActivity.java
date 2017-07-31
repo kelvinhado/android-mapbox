@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,8 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener, MapFragment.OnNewPositionSelectedListener {
-    private MapFragment mMapFragment;
+        implements GoogleApiClient.OnConnectionFailedListener, MapBoxFragment.OnNewPositionSelectedListener {
+
+    public static final String MAP_EXTRA = "map_extra";
+    public static final int MAP_MAPBOX = 0;
+    public static final int MAP_GMAPS = 1;
+
+    private CustomMapFragment mMapFragment;
     private PlaceAutocompleteFragment autocompleteFragment;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -53,17 +59,29 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mMapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_map);
+
+        int mapMode = getIntent().getIntExtra(MAP_EXTRA, -1);
+
+
+        mMapFragment = new MapBoxFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frameLayout_map, (MapBoxFragment) mMapFragment);
+        ft.commit();
+
+
+
+        // init auto-complete fragment
         autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         mAddressResultReceiver = new AddressResultReceiver(new Handler());
         initialiseAutocompleteFragment();
+
+        // init drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         addressList = getSavedAddresses();
         mAdapter = new AddressesAdapter(this, addressList);
         mDrawerList.setAdapter(mAdapter);
-        // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
     }
@@ -89,8 +107,11 @@ public class MainActivity extends AppCompatActivity
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                mMapFragment.changeMarkerPosition(Utils.toMapBoxLatLng(place.getLatLng()),
-                        place.getAddress().toString(), true);
+                mMapFragment.changeMarkerPosition(
+                        place.getLatLng().latitude,
+                        place.getLatLng().longitude,
+                        place.getAddress().toString(),
+                        true);
                 saveNewAddress(new Address(place.getAddress().toString(),
                         place.getLatLng().latitude, place.getLatLng().longitude));
             }
@@ -108,10 +129,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onNewPositionSelected(LatLng position) {
+    public void onNewPositionSelected(double latitude, double longitude) {
         Location loc = new Location(LocationManager.GPS_PROVIDER);
-        loc.setLatitude(position.latitude);
-        loc.setLongitude(position.longitude);
+        loc.setLatitude(latitude);
+        loc.setLongitude(longitude);
         lastSelectedLocation = loc;
         fetchAddress();
     }
@@ -163,8 +184,11 @@ public class MainActivity extends AppCompatActivity
             mDrawerList.setItemChecked(position, true);
             Address selectedAddress = (Address) mDrawerList.getItemAtPosition(position);
             mDrawerLayout.closeDrawer(Gravity.LEFT);
-            mMapFragment.changeMarkerPosition(Utils.toMapBoxLatLng(selectedAddress.getLatitude(),
-                    selectedAddress.getLongitude()), selectedAddress.getPlaceName(), true);
+            mMapFragment.changeMarkerPosition(
+                    selectedAddress.getLatitude(),
+                    selectedAddress.getLongitude(),
+                    selectedAddress.getPlaceName(),
+                    true);
         }
     }
 

@@ -6,10 +6,12 @@ A quick project that shows the power of MapBox for Android
 Integrate MapBox SDK and show current user position
 
 ## Step 2 
-Add a search bar to query addresses
+Add a search bar to query addresses.
+Used google autocompletion fragment.
 
 ## Step 3
-Search for addresses using the map gesture 
+Search for addresses using the map gesture.
+Used Intent service for reversion geocoding because the operation may take some time. And Async are not deisgned for long processing.
 
 ## Step 4
 Decided to use sharedpreferences to store the 15 last known location.
