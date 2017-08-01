@@ -207,6 +207,12 @@ public class MainActivity extends AppCompatActivity
         return addressList;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_slide_back_in, R.anim.activity_slide_back_out);
+    }
+
     class AddressResultReceiver extends ResultReceiver {
 
         public AddressResultReceiver(Handler handler) {
@@ -241,5 +247,4 @@ public class MainActivity extends AppCompatActivity
             autocompleteFragment.setText(selectedAddress.getPlaceName());
         }
     }
-
 }

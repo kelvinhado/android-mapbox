@@ -14,6 +14,8 @@ import android.view.View;
 
 public class SplashActivity extends AppCompatActivity {
 
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1993;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,17 +36,17 @@ public class SplashActivity extends AppCompatActivity {
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 intent.putExtra(MainActivity.MAP_EXTRA, MainActivity.MAP_MAPBOX);
                 startActivity(intent);
+                overridePendingTransition(R.anim.activity_slide_in, R.anim.activty_slide_out);
                 break;
             case R.id.buttonMaps:
                 Intent intent2 = new Intent(SplashActivity.this, MainActivity.class);
                 intent2.putExtra(MainActivity.MAP_EXTRA, MainActivity.MAP_GMAPS);
                 startActivity(intent2);
+                overridePendingTransition(R.anim.activity_slide_in, R.anim.activty_slide_out);
                 break;
         }
     }
 
-
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1993;
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {

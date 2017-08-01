@@ -32,6 +32,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 public class MapBoxFragment extends Fragment implements CustomMapFragment {
 
     private static final String MAPBOX_API_KEY = BuildConfig.MAPBOX_API_KEY;
+    OnNewPositionSelectedListener mCallback;
     private MapView mapView;
     private MapboxMap mapboxMap;
     private boolean isBeingAnimated;
@@ -39,7 +40,6 @@ public class MapBoxFragment extends Fragment implements CustomMapFragment {
     private LatLng userPosition;
     private LatLng selectedPosition;
     private Marker marker;
-    OnNewPositionSelectedListener mCallback;
 
     public MapBoxFragment() {
     }
@@ -60,7 +60,6 @@ public class MapBoxFragment extends Fragment implements CustomMapFragment {
             @Override
             public void onMapReady(final MapboxMap mapboxMap) {
                 MapBoxFragment.this.mapboxMap = mapboxMap;
-
                 mapboxMap.setOnMyLocationChangeListener(new MapboxMap.OnMyLocationChangeListener() {
                     @Override
                     public void onMyLocationChange(@Nullable Location location) {
@@ -174,11 +173,6 @@ public class MapBoxFragment extends Fragment implements CustomMapFragment {
         mapView.onSaveInstanceState(outState);
     }
 
-    // Container Activity must implement this interface
-    public interface OnNewPositionSelectedListener {
-        void onNewPositionSelected(double latitude, double longitude);
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -195,5 +189,10 @@ public class MapBoxFragment extends Fragment implements CustomMapFragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnNewPositionSelectedListener");
         }
+    }
+
+    // Container Activity must implement this interface
+    public interface OnNewPositionSelectedListener {
+        void onNewPositionSelected(double latitude, double longitude);
     }
 }

@@ -12,7 +12,7 @@
     <string name="button_mapbox">Use Mapbox</string>
     <string name="button_maps">Use Google Maps</string>
     <string name="beautiful_wallpaper">content_description_background_wallpaper</string>
-    <string name="textview_splash_title">Ma Carte</string>
+    <string name="textview_splash_title">Demo Training</string>
     <string name="textview_splash_credits">Made by Kelvin Hado for ChauffeurPrivé</string>
     <string name="textview_drawer_recents_places">Addresses récentes :</string>
 </resources>

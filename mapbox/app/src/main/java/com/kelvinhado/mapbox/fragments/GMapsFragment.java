@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.kelvinhado.mapbox.R;
 
 
@@ -40,10 +42,8 @@ public class GMapsFragment extends Fragment implements OnMapReadyCallback, Custo
         map.getUiSettings().setMapToolbarEnabled(false);
         map.getUiSettings().setZoomControlsEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(true);
-        map.setMaxZoomPreference(18);
-
-        //TODO implements same behavior as MapBoxFragment
-
+        map.setMaxZoomPreference(12);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(48.8534, 2.3488), 12));
     }
 
     @Override
