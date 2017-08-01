@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -204,7 +203,6 @@ public class MainActivity extends AppCompatActivity
             if(data.length == 3)
                 addressList.add(new Address(data[0],Double.parseDouble(data[1]),
                         Double.parseDouble(data[2])));
-            Log.d("Address", ">" +  data[0] + "/" + Double.parseDouble(data[1]) + "/" + Double.parseDouble(data[2]));
         }
         return addressList;
     }
