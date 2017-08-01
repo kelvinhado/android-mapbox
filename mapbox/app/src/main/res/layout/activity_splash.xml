@@ -5,25 +5,53 @@
     android:layout_height="match_parent"
     tools:context="com.kelvinhado.mapbox.SplashActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/beautiful_wallpaper"
+        android:scaleType="fitXY"
+        android:src="@drawable/wallpaper"/>
+
+
+
     <Button
         android:id="@+id/buttonMapBox"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonMaps"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="186dp"
-        android:text="@string/button_mapbox"
-        android:onClick="onClick"/>
+        android:layout_marginBottom="@dimen/margin_button_between_elements"
+        android:layout_marginEnd="@dimen/margin_button_splash"
+        android:layout_marginStart="@dimen/margin_button_splash"
+        android:onClick="onClick"
+        android:text="@string/button_mapbox" />
 
     <Button
         android:id="@+id/buttonMaps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="110dp"
+        android:layout_marginEnd="@dimen/margin_button_splash"
+        android:layout_marginStart="@dimen/margin_button_splash"
+        android:onClick="onClick"
+        android:text="@string/button_maps" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_maps"
-        android:layout_marginTop="71dp"
-        android:layout_alignTop="@+id/buttonMapBox"
-        android:layout_alignLeft="@+id/buttonMapBox"
-        android:layout_alignStart="@+id/buttonMapBox"
-        android:layout_alignRight="@+id/buttonMapBox"
-        android:layout_alignEnd="@+id/buttonMapBox"
-        android:onClick="onClick"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp"
+        android:text="@string/textview_splash_title"
+        android:textSize="40sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/textview_splash_credits"
+        android:textSize="12sp" />
 </RelativeLayout>

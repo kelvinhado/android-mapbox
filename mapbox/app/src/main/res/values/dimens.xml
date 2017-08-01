@@ -1,3 +1,8 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="margin_button_splash">40dp</dimen>
+    <dimen name="margin_button_between_elements">20dp</dimen>
+
+
 </resources>
