@@ -19,4 +19,13 @@ It might not be a good solution for performance .. consider using the SqlLite DB
 
 ## Step 5
 Made the refacto to be able to easily switch between different maps provider. change fragment using a framelayout.
+I did not made the mirror implementation for the Maps provider. I'm only displaying the fragment.
+
+## Step 6
+Skipped Unit Test, Instrumented test are required.
+
+## Step 7 
+Designed the app with a better UX/UI, smooth transition and cool images.
+
+
 
