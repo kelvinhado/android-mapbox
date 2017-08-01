@@ -1,6 +1,13 @@
 # android-mapbox
 A quick project that shows the power of MapBox for Android 
 
+# Getting started (required)
+
+To make it work on your device, you'll have to provide your own API key inside the gradle.properties file.
+Make sure you added thos two lines : 
+MAPBOX_API_KEY="YOUR_API_KEY"
+G_PLACES_API_KEY="YOUR_API_KEY"
+
 
 ## Step 1 
 Integrate MapBox SDK and show current user position
