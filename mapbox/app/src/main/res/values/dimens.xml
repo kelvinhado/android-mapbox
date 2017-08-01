@@ -3,6 +3,6 @@
 
     <dimen name="margin_button_splash">40dp</dimen>
     <dimen name="margin_button_between_elements">20dp</dimen>
-
+    <dimen name="margin_textview_drawer">5dp</dimen>
 
 </resources>

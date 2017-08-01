@@ -14,4 +14,5 @@
     <string name="beautiful_wallpaper">content_description_background_wallpaper</string>
     <string name="textview_splash_title">Ma Carte</string>
     <string name="textview_splash_credits">Made by Kelvin Hado for ChauffeurPrivé</string>
+    <string name="textview_drawer_recents_places">Addresses récentes :</string>
 </resources>

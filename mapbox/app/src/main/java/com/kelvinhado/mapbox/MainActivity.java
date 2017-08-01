@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
 
         // init drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList = (ListView) findViewById(R.id.drawer_listview);
         addressList = getSavedAddresses();
         mAdapter = new AddressesAdapter(this, addressList);
         mDrawerList.setAdapter(mAdapter);
@@ -163,43 +163,8 @@ public class MainActivity extends AppCompatActivity
         startService(intent);
     }
 
-    class AddressResultReceiver extends ResultReceiver {
-
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-            if (resultCode == Constants.SUCCESS_RESULT) {
-                autocompleteFragment.setText(mAddressOutput);
-                saveNewAddress(new Address(mAddressOutput,
-                        lastSelectedLocation.getLatitude(), lastSelectedLocation.getLongitude()));
-            }
-            else {
-                autocompleteFragment.setText("");
-            }
-        }
-    }
-
     public void openDrawer(View view){
         mDrawerLayout.openDrawer(Gravity.LEFT);
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mDrawerList.setItemChecked(position, true);
-            Address selectedAddress = (Address) mDrawerList.getItemAtPosition(position);
-            mDrawerLayout.closeDrawer(Gravity.LEFT);
-            mMapFragment.changeMarkerPosition(
-                    selectedAddress.getLatitude(),
-                    selectedAddress.getLongitude(),
-                    selectedAddress.getPlaceName(),
-                    true);
-            autocompleteFragment.setText(selectedAddress.getPlaceName());
-        }
     }
 
     // used shared preferences because of the small amount of data stored
@@ -242,6 +207,41 @@ public class MainActivity extends AppCompatActivity
             Log.d("Address", ">" +  data[0] + "/" + Double.parseDouble(data[1]) + "/" + Double.parseDouble(data[2]));
         }
         return addressList;
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                autocompleteFragment.setText(mAddressOutput);
+                saveNewAddress(new Address(mAddressOutput,
+                        lastSelectedLocation.getLatitude(), lastSelectedLocation.getLongitude()));
+            }
+            else {
+                autocompleteFragment.setText("");
+            }
+        }
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            mDrawerList.setItemChecked(position, true);
+            Address selectedAddress = (Address) mDrawerList.getItemAtPosition(position);
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+            mMapFragment.changeMarkerPosition(
+                    selectedAddress.getLatitude(),
+                    selectedAddress.getLongitude(),
+                    selectedAddress.getPlaceName(),
+                    true);
+            autocompleteFragment.setText(selectedAddress.getPlaceName());
+        }
     }
 
 }
